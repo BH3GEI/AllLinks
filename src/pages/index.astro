@@ -414,23 +414,49 @@ import '@fontsource/space-mono';
 				const links = await fetchLinks();
 				const linksList = document.querySelector('.links-list');
 				
-				const newHtml = links.map((link, index) => `
-					<li class="link-item" style="animation-delay: ${index * 100}ms">
-						<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
-							<span class="link-icon">${link.icon}</span>
-							<span class="link-name">${link.name}</span>
-						</a>
-					</li>
-				`).join('');
-
-				linksList.innerHTML = newHtml;
-
-				// 绑定事件监听器
-				linksList.querySelectorAll('a[target="_blank"]').forEach(link => {
-					link.addEventListener('click', (e) => {
+				// 保存现有的链接元素
+				const existingLinks = Array.from(linksList.children);
+				
+				// 创建新的链接元素
+				const newElements = links.map((link, index) => {
+					const li = document.createElement('li');
+					li.className = 'link-item';
+					li.style.animationDelay = `${index * 100}ms`;
+					
+					const a = document.createElement('a');
+					a.href = link.url;
+					a.target = '_blank';
+					a.rel = 'noopener noreferrer';
+					a.className = 'link';
+					
+					const iconSpan = document.createElement('span');
+					iconSpan.className = 'link-icon';
+					iconSpan.textContent = link.icon;
+					
+					const nameSpan = document.createElement('span');
+					nameSpan.className = 'link-name';
+					nameSpan.textContent = link.name;
+					
+					a.appendChild(iconSpan);
+					a.appendChild(nameSpan);
+					li.appendChild(a);
+					
+					// 添加点击事件监听器
+					a.addEventListener('click', (e) => {
 						e.preventDefault();
-						window.open(link.href, '_blank');
+						window.open(a.href, '_blank');
 					});
+					
+					return li;
+				});
+				
+				// 清空列表并添加新元素
+				while (linksList.firstChild) {
+					linksList.removeChild(linksList.firstChild);
+				}
+				
+				newElements.forEach(element => {
+					linksList.appendChild(element);
 				});
 			}
 
