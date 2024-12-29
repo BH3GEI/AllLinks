@@ -44,7 +44,8 @@ const links = await getLinks();
 				margin: 0;
 				background: #0f0f23;
 				color: #fff;
-				overflow: hidden;
+				overflow-x: hidden;
+				overflow-y: auto;
 			}
 			
 			#stars-container {
@@ -139,10 +140,11 @@ const links = await getLinks();
 				padding: 2rem;
 				position: relative;
 				z-index: 1;
-				height: 100vh;
+				min-height: 100vh;
 				display: flex;
 				flex-direction: column;
-				justify-content: center;
+				justify-content: flex-start;
+				padding-top: 100px;
 			}
 
 			h1 {
@@ -236,10 +238,36 @@ const links = await getLinks();
 				box-shadow: 0 4px 12px rgba(var(--accent), 0.2);
 			}
 
-			.search-btn {
+			.search-container {
 				position: fixed;
 				top: 20px;
 				right: 20px;
+				z-index: 10;
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.search-input {
+				padding: 10px 15px;
+				background: rgba(255, 255, 255, 0.1);
+				border: 1px solid rgba(var(--accent), 0.3);
+				border-radius: 8px;
+				color: #fff;
+				font-family: 'Space Mono', monospace;
+				backdrop-filter: blur(10px);
+				transition: all 0.3s ease;
+				width: 200px;
+			}
+
+			.search-input:focus {
+				outline: none;
+				background: rgba(var(--accent), 0.1);
+				border-color: rgba(var(--accent), 0.5);
+				box-shadow: 0 0 15px rgba(var(--accent), 0.2);
+			}
+
+			.search-btn {
 				padding: 10px 20px;
 				background: rgba(255, 255, 255, 0.1);
 				border: 1px solid rgba(var(--accent), 0.3);
@@ -248,7 +276,8 @@ const links = await getLinks();
 				text-decoration: none;
 				backdrop-filter: blur(10px);
 				transition: all 0.3s ease;
-				z-index: 10;
+				cursor: pointer;
+				font-family: 'Space Mono', monospace;
 			}
 
 			.search-btn:hover {
@@ -274,9 +303,10 @@ const links = await getLinks();
 			<div class="shooting-star" style="animation-delay: 2s"></div>
 			<div class="shooting-star" style="animation-delay: 4s"></div>
 		</div>
-		<a href="https://search.brave.com" class="search-btn">
-			🔍 Brave Search
-		</a>
+		<div class="search-container">
+			<input type="text" class="search-input" placeholder="Search..." id="searchInput">
+			<button class="search-btn" id="searchBtn">🔍 Search</button>
+		</div>
 		<div class="container">
 			<h1>YAO's Links</h1>
 			<ul class="links-list">
@@ -292,8 +322,32 @@ const links = await getLinks();
 		</div>
 
 		<script>
-			// 删除原有的 createStarryBackground 和 createConstellation 函数
-			// 不再需要它们，因为我们使用纯 CSS 实现星空效果
+			// 搜索功能
+			const searchInput = document.getElementById('searchInput');
+			const searchBtn = document.getElementById('searchBtn');
+			const engines = [
+				{ name: 'Brave', url: 'https://search.brave.com/search?q=' },
+				{ name: 'Ecosia', url: 'https://www.ecosia.org/search?q=' },
+				{ name: 'Qwant', url: 'https://www.qwant.com/?q=' }
+			];
+			let currentEngine = 0;
+
+			// 切换搜索引擎
+			searchBtn.addEventListener('click', () => {
+				const query = searchInput.value.trim();
+				if (query) {
+					window.location.href = engines[currentEngine].url + encodeURIComponent(query);
+					currentEngine = (currentEngine + 1) % engines.length;
+					searchBtn.textContent = `🔍 ${engines[currentEngine].name}`;
+				}
+			});
+
+			// 回车键搜索
+			searchInput.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					searchBtn.click();
+				}
+			});
 		</script>
 	</body>
 </html>
