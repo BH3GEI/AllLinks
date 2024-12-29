@@ -464,23 +464,49 @@ const links = await fetchLinks();
 				const linksChanged = JSON.stringify(currentLinks) !== JSON.stringify(links);
 				
 				if (linksChanged) {
-					linksList.innerHTML = links.map((link, index) => `
-						<li class="link-item" style="animation-delay: ${index * 100}ms">
-							<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
-								<span class="link-icon">${link.icon}</span>
-								<span class="link-name">${link.name}</span>
-							</a>
-						</li>
-					`).join('');
-
-					// 重新绑定事件监听器
-					const newLinks = linksList.querySelectorAll('a[target="_blank"]');
-					newLinks.forEach(link => {
-						link.addEventListener('click', (e) => {
-							e.preventDefault();
-							window.open(link.href, '_blank');
+					const oldLinks = linksList.innerHTML;  // 保存旧的HTML以防更新失败
+					try {
+						const newLinks = links.map((link, index) => {
+							const li = document.createElement('li');
+							li.className = 'link-item';
+							li.style.animationDelay = `${index * 100}ms`;
+							
+							const a = document.createElement('a');
+							a.href = link.url;
+							a.target = '_blank';
+							a.rel = 'noopener noreferrer';
+							a.className = 'link';
+							
+							const iconSpan = document.createElement('span');
+							iconSpan.className = 'link-icon';
+							iconSpan.textContent = link.icon;
+							
+							const nameSpan = document.createElement('span');
+							nameSpan.className = 'link-name';
+							nameSpan.textContent = link.name;
+							
+							a.appendChild(iconSpan);
+							a.appendChild(nameSpan);
+							li.appendChild(a);
+							
+							return li;
 						});
-					});
+						
+						// 清空并添加新元素
+						linksList.innerHTML = '';
+						newLinks.forEach(link => linksList.appendChild(link));
+						
+						// 重新绑定事件监听器
+						linksList.querySelectorAll('a[target="_blank"]').forEach(link => {
+							link.addEventListener('click', (e) => {
+								e.preventDefault();
+								window.open(link.href, '_blank');
+							});
+						});
+					} catch (error) {
+						console.error('Error updating links:', error);
+						linksList.innerHTML = oldLinks;  // 如果更新失败，恢复原来的内容
+					}
 				}
 			}
 
@@ -489,7 +515,8 @@ const links = await fetchLinks();
 
 			// 页面加载完成后等待一段时间再进行首次更新，以确保样式已完全加载
 			document.addEventListener('DOMContentLoaded', () => {
-				setTimeout(updateLinks, 1000);
+				// 增加延迟时间到3秒，确保样式完全加载
+				setTimeout(updateLinks, 3000);
 			});
 
 			const searchInput = document.getElementById('searchInput');
