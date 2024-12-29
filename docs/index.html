@@ -304,7 +304,7 @@
 
     <script>
         async function fetchLinks() {
-            const LINKS_URL = 'https://cdn.jsdelivr.net/gh/BH3GEI/Resume@main/all_links.md';
+            const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
             try {
                 const response = await fetch(`${LINKS_URL}?v=${Date.now()}`);
                 
