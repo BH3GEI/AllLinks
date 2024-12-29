@@ -46,7 +46,8 @@ const links = await getLinks();
 				background: #0f0f23;
 				color: #fff;
 				overflow-x: hidden;
-				overflow-y: scroll;
+				overflow-y: auto;
+				height: 100vh;
 			}
 
 			/* 自定义滚动条样式 */
@@ -168,11 +169,12 @@ const links = await getLinks();
 				padding: 2rem;
 				position: relative;
 				z-index: 1;
-				min-height: 100vh;
+				min-height: calc(100vh - 4rem);
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-start;
 				padding-top: 100px;
+				overflow-y: auto;
 			}
 
 			h1 {
@@ -331,7 +333,6 @@ const links = await getLinks();
 							target="_blank" 
 							rel="noopener noreferrer" 
 							class="link"
-							onclick="window.open(this.href, '_blank'); return false;"
 						>
 							<span class="link-icon">{link.icon}</span>
 							<span class="link-name">{link.name}</span>
