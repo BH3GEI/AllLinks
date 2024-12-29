@@ -375,6 +375,17 @@ const links = await getLinks();
 					linkItems.forEach(item => item.classList.remove('hidden'));
 				}
 			});
+
+			document.addEventListener('DOMContentLoaded', () => {
+				const links = document.querySelectorAll('a[target="_blank"]');
+				
+				links.forEach(link => {
+					link.addEventListener('click', (e) => {
+						e.preventDefault();
+						window.open(link.href, '_blank');
+					});
+				});
+			});
 		</script>
 	</body>
 </html>
