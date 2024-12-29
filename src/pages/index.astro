@@ -1,32 +1,5 @@
 ---
 import '@fontsource/space-mono';
-
-async function fetchLinks() {
-  const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
-  try {
-    const response = await fetch(LINKS_URL);
-    const content = await response.text();
-    return content.split('\n')
-      .filter(line => line.trim())
-      .map(line => {
-        const matches = line.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);
-        if (matches) {
-          return {
-            name: matches[1],
-            url: matches[2],
-            icon: matches[3]?.replace(/[\[\]]/g, '') || ''
-          };
-        }
-        return null;
-      })
-      .filter(Boolean);
-  } catch (error) {
-    console.error('Error fetching links:', error);
-    return [];
-  }
-}
-
-const links = await fetchLinks();
 ---
 
 <html lang="en">
@@ -407,19 +380,7 @@ const links = await fetchLinks();
 		<div class="container">
 			<h1>YAO's Links</h1>
 			<ul class="links-list">
-				{links.map((link, index) => (
-					<li class="link-item" style={`animation-delay: ${index * 100}ms`}>
-						<a 
-							href={link.url} 
-							target="_blank" 
-							rel="noopener noreferrer" 
-							class="link"
-						>
-							<span class="link-icon">{link.icon}</span>
-							<span class="link-name">{link.name}</span>
-						</a>
-					</li>
-				))}
+				<!-- Links will be loaded by JavaScript -->
 			</ul>
 		</div>
 
@@ -453,42 +414,24 @@ const links = await fetchLinks();
 				const links = await fetchLinks();
 				const linksList = document.querySelector('.links-list');
 				
-				// 比较新旧链接，只有当内容真正改变时才更新
-				const currentLinks = Array.from(linksList.querySelectorAll('.link-item')).map(item => ({
-					name: item.querySelector('.link-name').textContent,
-					url: item.querySelector('a').href,
-					icon: item.querySelector('.link-icon').textContent
-				}));
+				const newHtml = links.map((link, index) => `
+					<li class="link-item" style="animation-delay: ${index * 100}ms">
+						<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
+							<span class="link-icon">${link.icon}</span>
+							<span class="link-name">${link.name}</span>
+						</a>
+					</li>
+				`).join('');
 
-				const linksChanged = JSON.stringify(currentLinks) !== JSON.stringify(links);
-				
-				if (linksChanged) {
-					const newHtml = links.map((link, index) => `
-						<li class="link-item" style="animation-delay: ${index * 100}ms">
-							<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
-								<span class="link-icon">${link.icon}</span>
-								<span class="link-name">${link.name}</span>
-							</a>
-						</li>
-					`).join('');
+				linksList.innerHTML = newHtml;
 
-					// 创建一个临时容器来检查新内容是否有效
-					const temp = document.createElement('div');
-					temp.innerHTML = newHtml;
-					
-					// 如果新内容看起来是有效的，才更新
-					if (temp.querySelectorAll('.link-item').length > 0) {
-						linksList.innerHTML = newHtml;
-						
-						// 重新绑定事件监听器
-						linksList.querySelectorAll('a[target="_blank"]').forEach(link => {
-							link.addEventListener('click', (e) => {
-								e.preventDefault();
-								window.open(link.href, '_blank');
-							});
-						});
-					}
-				}
+				// 绑定事件监听器
+				linksList.querySelectorAll('a[target="_blank"]').forEach(link => {
+					link.addEventListener('click', (e) => {
+						e.preventDefault();
+						window.open(link.href, '_blank');
+					});
+				});
 			}
 
 			// 页面加载完成后立即更新一次
