@@ -1,6 +1,346 @@
-<!DOCTYPE html><html lang="en" data-astro-cid-j7pv25f6> <head><meta charset="utf-8"><link rel="icon" type="image/png" href="https://bh3gei.github.io/avatar.png"><meta name="viewport" content="width=device-width"><meta name="generator" content="Astro v5.1.1"><title>YAO's Links</title><link rel="stylesheet" href="/AllLinks/assets/index.EqrinykC.css"></head> <body data-astro-cid-j7pv25f6> <div id="stars-container" data-astro-cid-j7pv25f6> <div class="shooting-star" style="animation-delay: 0s" data-astro-cid-j7pv25f6></div> <div class="shooting-star" style="animation-delay: 2s" data-astro-cid-j7pv25f6></div> <div class="shooting-star" style="animation-delay: 4s" data-astro-cid-j7pv25f6></div> </div> <div class="search-container" data-astro-cid-j7pv25f6> <div class="search-input-container" data-astro-cid-j7pv25f6> <input type="text" class="search-input" placeholder="Search links..." id="searchInput" data-astro-cid-j7pv25f6> <span class="search-icon" id="searchIcon" data-astro-cid-j7pv25f6>🔍</span> <div class="search-engines" id="searchEngines" data-astro-cid-j7pv25f6> <button class="engine-btn" data-url="https://www.google.com/search?q=" data-astro-cid-j7pv25f6> <span data-astro-cid-j7pv25f6>🔍</span> Google
-</button> <button class="engine-btn" data-url="https://www.ecosia.org/search?q=" data-astro-cid-j7pv25f6> <span data-astro-cid-j7pv25f6>🌳</span> Ecosia
-</button> <button class="engine-btn" data-url="https://duckduckgo.com/?q=" data-astro-cid-j7pv25f6> <span data-astro-cid-j7pv25f6>🦆</span> DuckDuckGo
-</button> <button class="engine-btn" data-url="https://www.bing.com/search?q=" data-astro-cid-j7pv25f6> <span data-astro-cid-j7pv25f6>🔎</span> Bing
-</button> </div> </div> </div> <div class="container" data-astro-cid-j7pv25f6> <h1 data-astro-cid-j7pv25f6>YAO's Links</h1> <ul class="links-list" data-astro-cid-j7pv25f6> <!-- Links will be loaded by JavaScript --> </ul> </div> <script type="module">async function f(){const t="https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md";try{return(await(await fetch(t)).text()).split(`
-`).filter(s=>s.trim()).map(s=>{const c=s.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);return c?{name:c[1],url:c[2],icon:c[3]?.replace(/[\[\]]/g,"")||""}:null}).filter(Boolean)}catch(e){return console.error("Error fetching links:",e),[]}}async function m(){const t=await f(),e=document.querySelector(".links-list");Array.from(e.children);const n=t.map((s,c)=>{const r=document.createElement("li");r.className="link-item",r.style.animationDelay=`${c*100}ms`;const a=document.createElement("a");a.href=s.url,a.target="_blank",a.rel="noopener noreferrer",a.className="link";const l=document.createElement("span");l.className="link-icon",l.textContent=s.icon;const i=document.createElement("span");return i.className="link-name",i.textContent=s.name,a.appendChild(l),a.appendChild(i),r.appendChild(a),a.addEventListener("click",h=>{h.preventDefault(),window.open(a.href,"_blank")}),r});for(;e.firstChild;)e.removeChild(e.firstChild);n.forEach(s=>{e.appendChild(s)})}document.addEventListener("DOMContentLoaded",m);setInterval(m,5*60*1e3);const d=document.getElementById("searchInput"),p=document.getElementById("searchIcon"),o=document.getElementById("searchEngines"),u=document.querySelectorAll(".link-item");function L(t){t=t.toLowerCase();let e=!1;return u.forEach(n=>{n.querySelector(".link-name").textContent.toLowerCase().includes(t)?(n.classList.remove("hidden"),e=!0):n.classList.add("hidden")}),e}d.addEventListener("input",t=>{const e=t.target.value.trim();e?L(e)?o.classList.remove("show"):o.classList.add("show"):(u.forEach(n=>n.classList.remove("hidden")),o.classList.remove("show"))});p.addEventListener("click",()=>{d.value.trim()&&o.classList.toggle("show")});document.querySelectorAll(".engine-btn").forEach(t=>{t.addEventListener("click",()=>{const e=d.value.trim();e&&(window.open(t.dataset.url+encodeURIComponent(e),"_blank"),o.classList.remove("show"))})});document.addEventListener("click",t=>{t.target.closest(".search-container")||o.classList.remove("show")});document.addEventListener("DOMContentLoaded",()=>{document.querySelectorAll('a[target="_blank"]').forEach(e=>{e.addEventListener("click",n=>{n.preventDefault(),window.open(e.href,"_blank")})})});</script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>YAO's Links</title>
+    <link rel="icon" type="image/png" href="https://bh3gei.github.io/avatar.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: 136, 58, 234;
+            --accent-light: 224, 204, 250;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            margin: 0;
+            background: #0f0f23;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            padding-right: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(var(--accent), 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            width: 200px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(var(--accent), 0.1);
+            border-color: rgba(var(--accent), 0.5);
+            box-shadow: 0 0 15px rgba(var(--accent), 0.2);
+            width: 250px;
+        }
+
+        .search-engines {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(var(--accent), 0.3);
+            border-radius: 8px;
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 150px;
+        }
+
+        .search-engines.show {
+            display: flex;
+        }
+
+        .engine-btn {
+            padding: 8px 12px;
+            color: #fff;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            font-family: 'Space Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .engine-btn:hover {
+            background: rgba(var(--accent), 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: 4rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(var(--accent), 0.5);
+        }
+
+        .links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .link-item {
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .link-item.hidden {
+            display: none;
+        }
+
+        .link-item:hover {
+            transform: translateX(10px) scale(1.02);
+        }
+
+        .link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: #fff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            border: 1px solid rgba(var(--accent), 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .link:hover {
+            background: rgba(var(--accent), 0.1);
+            border-color: rgba(var(--accent), 0.3);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .link-name {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-top: 5rem;
+            }
+
+            .links-list {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                left: 20px;
+                right: 20px;
+            }
+
+            .search-input {
+                width: calc(100% - 30px);
+            }
+
+            .search-input:focus {
+                width: calc(100% - 30px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search links..." id="searchInput">
+        <div class="search-engines" id="searchEngines">
+            <button class="engine-btn" data-url="https://www.google.com/search?q=">
+                <span>🔍</span> Google
+            </button>
+            <button class="engine-btn" data-url="https://www.ecosia.org/search?q=">
+                <span>🌳</span> Ecosia
+            </button>
+            <button class="engine-btn" data-url="https://duckduckgo.com/?q=">
+                <span>🦆</span> DuckDuckGo
+            </button>
+            <button class="engine-btn" data-url="https://www.bing.com/search?q=">
+                <span>🔎</span> Bing
+            </button>
+        </div>
+    </div>
+    <div class="container">
+        <h1>YAO's Links</h1>
+        <ul class="links-list" id="linksList">
+            <!-- Links will be loaded by JavaScript -->
+        </ul>
+    </div>
+
+    <script>
+        async function fetchLinks() {
+            const LINKS_URL = 'https://cdn.jsdelivr.net/gh/BH3GEI/Resume@main/all_links.md';
+            try {
+                const response = await fetch(`${LINKS_URL}?t=${Date.now()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const content = await response.text();
+                console.log('Raw content length:', content.split('\n').length);
+                
+                const links = content.split('\n')
+                    .filter(line => line.trim())
+                    .map(line => {
+                        // 支持更多格式的链接匹配
+                        const matches = line.match(/\[(.*?)\]\((.*?)\)|\[(.*?)\]\[(.*?)\](?:\s*\[(.*?)\])?/);
+                        if (matches) {
+                            // 处理 [text](url) 格式
+                            if (matches[1] && matches[2]) {
+                                return {
+                                    name: matches[1],
+                                    url: matches[2],
+                                    icon: ''
+                                };
+                            }
+                            // 处理 [text][url][icon] 格式
+                            return {
+                                name: matches[3],
+                                url: matches[4],
+                                icon: matches[5]?.replace(/[\[\]]/g, '') || ''
+                            };
+                        }
+                        return null;
+                    })
+                    .filter(Boolean);
+                
+                console.log('Parsed links count:', links.length);
+                return links;
+            } catch (error) {
+                console.error('Error fetching links:', error);
+                console.error('Error details:', error.message);
+                return [];
+            }
+        }
+
+        async function updateLinks() {
+            const links = await fetchLinks();
+            const linksList = document.getElementById('linksList');
+            
+            if (links.length === 0) {
+                linksList.innerHTML = '<li class="link-item"><div class="link">No links found or error loading links</div></li>';
+                return;
+            }
+            
+            const html = links.map(link => `
+                <li class="link-item">
+                    <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
+                        <span class="link-icon">${link.icon}</span>
+                        <span class="link-name">${link.name}</span>
+                    </a>
+                </li>
+            `).join('');
+            
+            linksList.innerHTML = html;
+            console.log('Rendered links count:', links.length);
+        }
+
+        function filterLinks(query) {
+            query = query.toLowerCase();
+            let hasResults = false;
+            const linkItems = document.querySelectorAll('.link-item');
+            linkItems.forEach(item => {
+                const name = item.querySelector('.link-name').textContent.toLowerCase();
+                if (name.includes(query)) {
+                    item.classList.remove('hidden');
+                    hasResults = true;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+            return hasResults;
+        }
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const searchEngines = document.getElementById('searchEngines');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim();
+            if (query) {
+                const hasResults = filterLinks(query);
+                if (!hasResults) {
+                    searchEngines.classList.add('show');
+                } else {
+                    searchEngines.classList.remove('show');
+                }
+            } else {
+                document.querySelectorAll('.link-item').forEach(item => {
+                    item.classList.remove('hidden');
+                });
+                searchEngines.classList.remove('show');
+            }
+        });
+
+        // 搜索引擎集成
+        document.querySelectorAll('.engine-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const query = searchInput.value.trim();
+                if (query) {
+                    window.open(btn.dataset.url + encodeURIComponent(query), '_blank');
+                    searchEngines.classList.remove('show');
+                }
+            });
+        });
+
+        // 点击其他地方关闭搜索引擎列表
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-container')) {
+                searchEngines.classList.remove('show');
+            }
+        });
+
+        // 页面加载完成后更新链接
+        document.addEventListener('DOMContentLoaded', updateLinks);
+    </script>
+</body>
+</html> 
