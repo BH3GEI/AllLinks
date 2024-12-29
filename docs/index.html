@@ -304,9 +304,16 @@
 
     <script>
         async function fetchLinks() {
-            const LINKS_URL = 'https://cdn.jsdelivr.net/gh/BH3GEI/Resume@main/all_links.md';
+            const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
             try {
-                const response = await fetch(`${LINKS_URL}?t=${Date.now()}`);
+                const response = await fetch(LINKS_URL, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
