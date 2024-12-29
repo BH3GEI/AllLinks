@@ -46,9 +46,36 @@ const links = await getLinks();
 				background: #0f0f23;
 				color: #fff;
 				overflow-x: hidden;
-				overflow-y: auto;
+				overflow-y: scroll;
 			}
-			
+
+			/* 自定义滚动条样式 */
+			::-webkit-scrollbar {
+				width: 10px;
+				height: 10px;
+			}
+
+			::-webkit-scrollbar-track {
+				background: rgba(255, 255, 255, 0.05);
+				border-radius: 5px;
+			}
+
+			::-webkit-scrollbar-thumb {
+				background: rgba(var(--accent), 0.3);
+				border-radius: 5px;
+				transition: all 0.3s ease;
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background: rgba(var(--accent), 0.5);
+			}
+
+			/* Firefox 滚动条样式 */
+			* {
+				scrollbar-width: thin;
+				scrollbar-color: rgba(var(--accent), 0.3) rgba(255, 255, 255, 0.05);
+			}
+
 			#stars-container {
 				position: fixed;
 				top: 0;
@@ -299,7 +326,13 @@ const links = await getLinks();
 			<ul class="links-list">
 				{links.map((link, index) => (
 					<li class="link-item" style={`animation-delay: ${index * 100}ms`}>
-						<a href={link.url} target="_blank" rel="noopener noreferrer" class="link">
+						<a 
+							href={link.url} 
+							target="_blank" 
+							rel="noopener noreferrer" 
+							class="link"
+							onclick="window.open(this.href, '_blank'); return false;"
+						>
 							<span class="link-icon">{link.icon}</span>
 							<span class="link-name">{link.name}</span>
 						</a>
