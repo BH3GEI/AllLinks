@@ -1,5 +1,5 @@
 {
-  "name": "docs",
+  "name": "alllinks",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "npm run build && touch docs/.nojekyll"
+    "deploy": "rm -rf docs && npm run build && touch docs/.nojekyll"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.4",
