@@ -454,21 +454,43 @@ const links = await fetchLinks();
 				const links = await fetchLinks();
 				const linksList = document.querySelector('.links-list');
 				
-				linksList.innerHTML = links.map((link, index) => `
-					<li class="link-item" style="animation-delay: ${index * 100}ms">
-						<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
-							<span class="link-icon">${link.icon}</span>
-							<span class="link-name">${link.name}</span>
-						</a>
-					</li>
-				`).join('');
+				// 比较新旧链接，只有当内容真正改变时才更新
+				const currentLinks = Array.from(linksList.querySelectorAll('.link-item')).map(item => ({
+					name: item.querySelector('.link-name').textContent,
+					url: item.querySelector('a').href,
+					icon: item.querySelector('.link-icon').textContent
+				}));
+
+				const linksChanged = JSON.stringify(currentLinks) !== JSON.stringify(links);
+				
+				if (linksChanged) {
+					linksList.innerHTML = links.map((link, index) => `
+						<li class="link-item" style="animation-delay: ${index * 100}ms">
+							<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
+								<span class="link-icon">${link.icon}</span>
+								<span class="link-name">${link.name}</span>
+							</a>
+						</li>
+					`).join('');
+
+					// 重新绑定事件监听器
+					const newLinks = linksList.querySelectorAll('a[target="_blank"]');
+					newLinks.forEach(link => {
+						link.addEventListener('click', (e) => {
+							e.preventDefault();
+							window.open(link.href, '_blank');
+						});
+					});
+				}
 			}
 
 			// 每隔一定时间自动更新 (比如每5分钟)
 			setInterval(updateLinks, 5 * 60 * 1000);
 
-			// 页面加载完成后立即进行一次更新
-			document.addEventListener('DOMContentLoaded', updateLinks);
+			// 页面加载完成后等待一段时间再进行首次更新，以确保样式已完全加载
+			document.addEventListener('DOMContentLoaded', () => {
+				setTimeout(updateLinks, 1000);
+			});
 
 			const searchInput = document.getElementById('searchInput');
 			const searchIcon = document.getElementById('searchIcon');
