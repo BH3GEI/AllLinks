@@ -7,4 +7,8 @@ export default defineConfig({
   integrations: [tailwind()],
   site: 'https://bh3gei.github.io',
   base: '/',
+  outDir: './docs',
+  build: {
+    assets: 'assets'
+  }
 });
