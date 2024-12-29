@@ -304,8 +304,8 @@ const links = await getLinks();
 			<div class="shooting-star" style="animation-delay: 4s"></div>
 		</div>
 		<div class="search-container">
-			<input type="text" class="search-input" placeholder="Search..." id="searchInput">
-			<button class="search-btn" id="searchBtn">🔍 Search</button>
+			<input type="text" class="search-input" placeholder="Search with Ecosia..." id="searchInput">
+			<button class="search-btn" id="searchBtn">🌳 Ecosia</button>
 		</div>
 		<div class="container">
 			<h1>YAO's Links</h1>
@@ -325,27 +325,22 @@ const links = await getLinks();
 			// 搜索功能
 			const searchInput = document.getElementById('searchInput');
 			const searchBtn = document.getElementById('searchBtn');
-			const engines = [
-				{ name: 'Brave', url: 'https://search.brave.com/search?q=' },
-				{ name: 'Ecosia', url: 'https://www.ecosia.org/search?q=' },
-				{ name: 'Qwant', url: 'https://www.qwant.com/?q=' }
-			];
-			let currentEngine = 0;
 
-			// 切换搜索引擎
-			searchBtn.addEventListener('click', () => {
+			// 搜索处理
+			function performSearch() {
 				const query = searchInput.value.trim();
 				if (query) {
-					window.location.href = engines[currentEngine].url + encodeURIComponent(query);
-					currentEngine = (currentEngine + 1) % engines.length;
-					searchBtn.textContent = `🔍 ${engines[currentEngine].name}`;
+					window.location.href = `https://www.ecosia.org/search?q=${encodeURIComponent(query)}`;
 				}
-			});
+			}
+
+			// 点击搜索按钮
+			searchBtn.addEventListener('click', performSearch);
 
 			// 回车键搜索
 			searchInput.addEventListener('keypress', (e) => {
 				if (e.key === 'Enter') {
-					searchBtn.click();
+					performSearch();
 				}
 			});
 		</script>
