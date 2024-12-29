@@ -306,12 +306,7 @@
         async function fetchLinks() {
             const LINKS_URL = 'https://cdn.jsdelivr.net/gh/BH3GEI/Resume@main/all_links.md';
             try {
-                const response = await fetch(`${LINKS_URL}?v=${Date.now()}`, {
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const response = await fetch(`${LINKS_URL}?v=${Date.now()}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
