@@ -246,44 +246,61 @@ const links = await getLinks();
 				display: flex;
 				gap: 10px;
 				align-items: center;
+				flex-direction: column;
 			}
 
-			.search-input {
-				padding: 10px 15px;
+			.search-row {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.search-engines {
+				display: none;
 				background: rgba(255, 255, 255, 0.1);
-				border: 1px solid rgba(var(--accent), 0.3);
-				border-radius: 8px;
-				color: #fff;
-				font-family: 'Space Mono', monospace;
 				backdrop-filter: blur(10px);
-				transition: all 0.3s ease;
-				width: 200px;
-			}
-
-			.search-input:focus {
-				outline: none;
-				background: rgba(var(--accent), 0.1);
-				border-color: rgba(var(--accent), 0.5);
-				box-shadow: 0 0 15px rgba(var(--accent), 0.2);
-			}
-
-			.search-btn {
-				padding: 10px 20px;
-				background: rgba(255, 255, 255, 0.1);
 				border: 1px solid rgba(var(--accent), 0.3);
 				border-radius: 8px;
+				padding: 10px;
+				margin-top: 5px;
+			}
+
+			.search-engines.show {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.engine-btn {
+				padding: 8px 15px;
+				background: transparent;
+				border: 1px solid rgba(var(--accent), 0.3);
+				border-radius: 6px;
 				color: #fff;
 				text-decoration: none;
-				backdrop-filter: blur(10px);
 				transition: all 0.3s ease;
 				cursor: pointer;
 				font-family: 'Space Mono', monospace;
+				text-align: left;
+				display: flex;
+				align-items: center;
+				gap: 8px;
 			}
 
-			.search-btn:hover {
+			.engine-btn:hover {
 				background: rgba(var(--accent), 0.2);
-				transform: translateY(-2px);
-				box-shadow: 0 4px 12px rgba(var(--accent), 0.2);
+				transform: translateX(5px);
+			}
+
+			.no-results {
+				text-align: center;
+				padding: 1rem;
+				color: rgba(255, 255, 255, 0.7);
+				font-style: italic;
+			}
+
+			.hidden {
+				display: none !important;
 			}
 
 			@media (max-width: 600px) {
@@ -304,8 +321,24 @@ const links = await getLinks();
 			<div class="shooting-star" style="animation-delay: 4s"></div>
 		</div>
 		<div class="search-container">
-			<input type="text" class="search-input" placeholder="Search with Ecosia..." id="searchInput">
-			<button class="search-btn" id="searchBtn">🌳 Ecosia</button>
+			<div class="search-row">
+				<input type="text" class="search-input" placeholder="Search links or web..." id="searchInput">
+				<button class="search-btn" id="searchBtn">🔍 Search</button>
+			</div>
+			<div class="search-engines" id="searchEngines">
+				<button class="engine-btn" data-url="https://www.google.com/search?q=">
+					<span>🔍</span> Google
+				</button>
+				<button class="engine-btn" data-url="https://www.ecosia.org/search?q=">
+					<span>🌳</span> Ecosia
+				</button>
+				<button class="engine-btn" data-url="https://duckduckgo.com/?q=">
+					<span>🦆</span> DuckDuckGo
+				</button>
+				<button class="engine-btn" data-url="https://www.bing.com/search?q=">
+					<span>🔎</span> Bing
+				</button>
+			</div>
 		</div>
 		<div class="container">
 			<h1>YAO's Links</h1>
@@ -322,26 +355,67 @@ const links = await getLinks();
 		</div>
 
 		<script>
-			// 搜索功能
 			const searchInput = document.getElementById('searchInput');
 			const searchBtn = document.getElementById('searchBtn');
+			const searchEngines = document.getElementById('searchEngines');
+			const linkItems = document.querySelectorAll('.link-item');
+
+			// 本地搜索功能
+			function filterLinks(query) {
+				let hasResults = false;
+				query = query.toLowerCase();
+
+				linkItems.forEach(item => {
+					const name = item.querySelector('.link-name').textContent.toLowerCase();
+					if (name.includes(query)) {
+						item.classList.remove('hidden');
+						hasResults = true;
+					} else {
+						item.classList.add('hidden');
+					}
+				});
+
+				// 如果没有搜索结果，显示搜索引擎选项
+				if (!hasResults) {
+					searchEngines.classList.add('show');
+				} else {
+					searchEngines.classList.remove('show');
+				}
+			}
 
 			// 搜索处理
-			function performSearch() {
+			function handleSearch() {
 				const query = searchInput.value.trim();
 				if (query) {
-					window.location.href = `https://www.ecosia.org/search?q=${encodeURIComponent(query)}`;
+					filterLinks(query);
+				} else {
+					linkItems.forEach(item => item.classList.remove('hidden'));
+					searchEngines.classList.remove('show');
 				}
 			}
 
 			// 点击搜索按钮
-			searchBtn.addEventListener('click', performSearch);
+			searchBtn.addEventListener('click', handleSearch);
+
+			// 输入时实时搜索
+			searchInput.addEventListener('input', handleSearch);
 
 			// 回车键搜索
 			searchInput.addEventListener('keypress', (e) => {
 				if (e.key === 'Enter') {
-					performSearch();
+					handleSearch();
 				}
+			});
+
+			// 搜索引擎点击处理
+			document.querySelectorAll('.engine-btn').forEach(btn => {
+				btn.addEventListener('click', () => {
+					const query = searchInput.value.trim();
+					if (query) {
+						const url = btn.dataset.url + encodeURIComponent(query);
+						window.open(url, '_blank');
+					}
+				});
 			});
 		</script>
 	</body>
