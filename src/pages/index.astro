@@ -467,6 +467,9 @@ const links = await fetchLinks();
 			// 每隔一定时间自动更新 (比如每5分钟)
 			setInterval(updateLinks, 5 * 60 * 1000);
 
+			// 页面加载完成后立即进行一次更新
+			document.addEventListener('DOMContentLoaded', updateLinks);
+
 			const searchInput = document.getElementById('searchInput');
 			const searchIcon = document.getElementById('searchIcon');
 			const searchEngines = document.getElementById('searchEngines');
