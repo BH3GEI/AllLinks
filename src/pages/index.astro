@@ -15,7 +15,8 @@ async function getLinks() {
           name: matches[1],
           url: matches[2],
           icon: matches[3]?.replace(/[\[\]]/g, '') || '',
-          target: '_blank'
+          target: '_blank',
+          rel: 'noopener noreferrer'
         };
       }
       return null;
@@ -243,60 +244,30 @@ const links = await getLinks();
 				top: 20px;
 				right: 20px;
 				z-index: 10;
-				display: flex;
-				gap: 10px;
-				align-items: center;
-				flex-direction: column;
 			}
 
-			.search-row {
-				display: flex;
-				gap: 10px;
-				align-items: center;
-			}
-
-			.search-engines {
-				display: none;
+			.search-input {
+				padding: 10px 15px;
 				background: rgba(255, 255, 255, 0.1);
-				backdrop-filter: blur(10px);
 				border: 1px solid rgba(var(--accent), 0.3);
 				border-radius: 8px;
-				padding: 10px;
-				margin-top: 5px;
-			}
-
-			.search-engines.show {
-				display: flex;
-				flex-direction: column;
-				gap: 5px;
-			}
-
-			.engine-btn {
-				padding: 8px 15px;
-				background: transparent;
-				border: 1px solid rgba(var(--accent), 0.3);
-				border-radius: 6px;
 				color: #fff;
-				text-decoration: none;
-				transition: all 0.3s ease;
-				cursor: pointer;
 				font-family: 'Space Mono', monospace;
-				text-align: left;
-				display: flex;
-				align-items: center;
-				gap: 8px;
+				backdrop-filter: blur(10px);
+				transition: all 0.3s ease;
+				width: 200px;
 			}
 
-			.engine-btn:hover {
-				background: rgba(var(--accent), 0.2);
-				transform: translateX(5px);
+			.search-input:focus {
+				outline: none;
+				background: rgba(var(--accent), 0.1);
+				border-color: rgba(var(--accent), 0.5);
+				box-shadow: 0 0 15px rgba(var(--accent), 0.2);
+				width: 250px;
 			}
 
-			.no-results {
-				text-align: center;
-				padding: 1rem;
-				color: rgba(255, 255, 255, 0.7);
-				font-style: italic;
+			.search-input::placeholder {
+				color: rgba(255, 255, 255, 0.5);
 			}
 
 			.hidden {
@@ -321,31 +292,14 @@ const links = await getLinks();
 			<div class="shooting-star" style="animation-delay: 4s"></div>
 		</div>
 		<div class="search-container">
-			<div class="search-row">
-				<input type="text" class="search-input" placeholder="Search links or web..." id="searchInput">
-				<button class="search-btn" id="searchBtn">🔍 Search</button>
-			</div>
-			<div class="search-engines" id="searchEngines">
-				<button class="engine-btn" data-url="https://www.google.com/search?q=">
-					<span>🔍</span> Google
-				</button>
-				<button class="engine-btn" data-url="https://www.ecosia.org/search?q=">
-					<span>🌳</span> Ecosia
-				</button>
-				<button class="engine-btn" data-url="https://duckduckgo.com/?q=">
-					<span>🦆</span> DuckDuckGo
-				</button>
-				<button class="engine-btn" data-url="https://www.bing.com/search?q=">
-					<span>🔎</span> Bing
-				</button>
-			</div>
+			<input type="text" class="search-input" placeholder="Search links..." id="searchInput">
 		</div>
 		<div class="container">
 			<h1>YAO's Links</h1>
 			<ul class="links-list">
 				{links.map((link, index) => (
 					<li class="link-item" style={`animation-delay: ${index * 100}ms`}>
-						<a href={link.url} target={link.target} rel="noopener noreferrer" class="link">
+						<a href={link.url} target="_blank" rel="noopener noreferrer" class="link">
 							<span class="link-icon">{link.icon}</span>
 							<span class="link-name">{link.name}</span>
 						</a>
@@ -356,66 +310,29 @@ const links = await getLinks();
 
 		<script>
 			const searchInput = document.getElementById('searchInput');
-			const searchBtn = document.getElementById('searchBtn');
-			const searchEngines = document.getElementById('searchEngines');
 			const linkItems = document.querySelectorAll('.link-item');
 
 			// 本地搜索功能
 			function filterLinks(query) {
-				let hasResults = false;
 				query = query.toLowerCase();
-
 				linkItems.forEach(item => {
 					const name = item.querySelector('.link-name').textContent.toLowerCase();
 					if (name.includes(query)) {
 						item.classList.remove('hidden');
-						hasResults = true;
 					} else {
 						item.classList.add('hidden');
 					}
 				});
-
-				// 如果没有搜索结果，显示搜索引擎选项
-				if (!hasResults) {
-					searchEngines.classList.add('show');
-				} else {
-					searchEngines.classList.remove('show');
-				}
 			}
 
-			// 搜索处理
-			function handleSearch() {
-				const query = searchInput.value.trim();
+			// 输入时实时搜索
+			searchInput.addEventListener('input', (e) => {
+				const query = e.target.value.trim();
 				if (query) {
 					filterLinks(query);
 				} else {
 					linkItems.forEach(item => item.classList.remove('hidden'));
-					searchEngines.classList.remove('show');
 				}
-			}
-
-			// 点击搜索按钮
-			searchBtn.addEventListener('click', handleSearch);
-
-			// 输入时实时搜索
-			searchInput.addEventListener('input', handleSearch);
-
-			// 回车键搜索
-			searchInput.addEventListener('keypress', (e) => {
-				if (e.key === 'Enter') {
-					handleSearch();
-				}
-			});
-
-			// 搜索引擎点击处理
-			document.querySelectorAll('.engine-btn').forEach(btn => {
-				btn.addEventListener('click', () => {
-					const query = searchInput.value.trim();
-					if (query) {
-						const url = btn.dataset.url + encodeURIComponent(query);
-						window.open(url, '_blank');
-					}
-				});
 			});
 		</script>
 	</body>
