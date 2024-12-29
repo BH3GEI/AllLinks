@@ -14,7 +14,8 @@ async function getLinks() {
         return {
           name: matches[1],
           url: matches[2],
-          icon: matches[3]?.replace(/[\[\]]/g, '') || ''
+          icon: matches[3]?.replace(/[\[\]]/g, '') || '',
+          target: '_blank'
         };
       }
       return null;
@@ -235,6 +236,27 @@ const links = await getLinks();
 				box-shadow: 0 4px 12px rgba(var(--accent), 0.2);
 			}
 
+			.search-btn {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				padding: 10px 20px;
+				background: rgba(255, 255, 255, 0.1);
+				border: 1px solid rgba(var(--accent), 0.3);
+				border-radius: 8px;
+				color: #fff;
+				text-decoration: none;
+				backdrop-filter: blur(10px);
+				transition: all 0.3s ease;
+				z-index: 10;
+			}
+
+			.search-btn:hover {
+				background: rgba(var(--accent), 0.2);
+				transform: translateY(-2px);
+				box-shadow: 0 4px 12px rgba(var(--accent), 0.2);
+			}
+
 			@media (max-width: 600px) {
 				.container {
 					padding: 1rem;
@@ -252,15 +274,15 @@ const links = await getLinks();
 			<div class="shooting-star" style="animation-delay: 2s"></div>
 			<div class="shooting-star" style="animation-delay: 4s"></div>
 		</div>
-		<a href="https://duckduckgo.com" class="duckduckgo-btn">
-			🦆 DuckDuckGo
+		<a href="https://search.brave.com" class="search-btn">
+			🔍 Brave Search
 		</a>
 		<div class="container">
 			<h1>YAO's Links</h1>
 			<ul class="links-list">
 				{links.map((link, index) => (
 					<li class="link-item" style={`animation-delay: ${index * 100}ms`}>
-						<a href={link.url} target="_blank" class="link">
+						<a href={link.url} target={link.target} rel="noopener noreferrer" class="link">
 							<span class="link-icon">{link.icon}</span>
 							<span class="link-name">{link.name}</span>
 						</a>
