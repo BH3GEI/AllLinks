@@ -10,15 +10,35 @@
         :root {
             --accent: 136, 58, 234;
             --accent-light: 224, 204, 250;
+            --accent-dark: 49, 10, 101;
         }
         
         body {
             font-family: 'Space Mono', monospace;
             margin: 0;
-            background: #0f0f23;
+            background: linear-gradient(135deg, #0f0f23 0%, #1b1b2f 100%);
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(var(--accent), 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
 
         .container {
@@ -29,6 +49,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
         .search-container {
@@ -73,10 +95,15 @@
             flex-direction: column;
             gap: 4px;
             min-width: 150px;
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
         .search-engines.show {
             display: flex;
+            transform: translateY(0);
+            opacity: 1;
         }
 
         .engine-btn {
@@ -96,6 +123,7 @@
 
         .engine-btn:hover {
             background: rgba(var(--accent), 0.2);
+            transform: translateX(5px);
         }
 
         h1 {
@@ -105,6 +133,12 @@
             margin-top: 4rem;
             color: #fff;
             text-shadow: 0 0 10px rgba(var(--accent), 0.5);
+            animation: title-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes title-glow {
+            from { text-shadow: 0 0 10px rgba(var(--accent), 0.5); }
+            to { text-shadow: 0 0 20px rgba(var(--accent-light), 0.7); }
         }
 
         .links-list {
@@ -120,10 +154,20 @@
         .link-item {
             margin: 0;
             transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in 0.5s ease forwards;
         }
 
         .link-item.hidden {
             display: none;
+        }
+
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .link-item:hover {
@@ -142,6 +186,28 @@
             border: 1px solid rgba(var(--accent), 0.1);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(var(--accent), 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .link:hover::before {
+            left: 100%;
         }
 
         .link:hover {
@@ -155,10 +221,31 @@
             margin-right: 1rem;
             min-width: 2rem;
             text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .link:hover .link-icon {
+            transform: scale(1.2);
         }
 
         .link-name {
             font-size: 1.1rem;
+            position: relative;
+        }
+
+        .link-name::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: rgba(var(--accent), 0.5);
+            transition: width 0.3s ease;
+        }
+
+        .link:hover .link-name::after {
+            width: 100%;
         }
 
         @media (max-width: 600px) {
