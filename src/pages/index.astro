@@ -195,10 +195,13 @@ const links = await getLinks();
 				list-style: none;
 				padding: 0;
 				margin: 0;
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 1rem;
 			}
 
 			.link-item {
-				margin: 1rem 0;
+				margin: 0;
 				transition: all 0.3s ease;
 				opacity: 0;
 				transform: translateY(20px);
@@ -310,6 +313,10 @@ const links = await getLinks();
 
 				h1 {
 					font-size: 2rem;
+				}
+
+				.links-list {
+					grid-template-columns: 1fr;
 				}
 			}
 		</style>
