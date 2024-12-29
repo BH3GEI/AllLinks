@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [tailwind()],
   site: 'https://bh3gei.github.io',
-  base: '/AllLinks/',
+  base: '/AllLinks',
   outDir: './docs',
   build: {
     assets: 'assets'
