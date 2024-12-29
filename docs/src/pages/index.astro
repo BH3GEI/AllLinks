@@ -1,0 +1,73 @@
+---
+import '@fontsource/space-mono';
+
+const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/personal_links.md';
+
+async function getLinks() {
+  const response = await fetch(LINKS_URL);
+  const content = await response.text();
+  return content.split('\n')
+    .filter(line => line.trim())
+    .map(line => {
+      const matches = line.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);
+      if (matches) {
+        return {
+          name: matches[1],
+          url: matches[2],
+          icon: matches[3]?.replace(/[\[\]]/g, '') || ''
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+}
+
+const links = await getLinks();
+---
+
+<html lang="en" data-theme="synthwave">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>YAO's Links</title>
+		<style>
+			body {
+				font-family: 'Space Mono', monospace;
+			}
+			.link-card {
+				transition: transform 0.3s ease;
+			}
+			.link-card:hover {
+				transform: translateY(-5px);
+			}
+			.space-bg {
+				background: linear-gradient(to bottom, #2d1b4e, #1a0b2e);
+				background-attachment: fixed;
+			}
+		</style>
+	</head>
+	<body class="min-h-screen space-bg">
+		<main class="container mx-auto px-4 py-16">
+			<div class="text-center mb-12">
+				<h1 class="text-4xl md:text-6xl font-bold text-primary-content mb-4">YAO's Universe</h1>
+			</div>
+
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{links.map(link => (
+					<a href={link.url} target="_blank" class="link-card">
+						<div class="card bg-base-100/30 backdrop-blur-sm hover:bg-base-100/40 transition-all">
+							<div class="card-body">
+								<h2 class="card-title">
+									<span class="text-2xl">{link.icon}</span>
+									{link.name}
+								</h2>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</main>
+	</body>
+</html>
