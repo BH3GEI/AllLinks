@@ -1,36 +1,38 @@
 ---
 import '@fontsource/space-mono';
 
-const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
-
-async function getLinks() {
-  const response = await fetch(LINKS_URL);
-  const content = await response.text();
-  return content.split('\n')
-    .filter(line => line.trim())
-    .map(line => {
-      const matches = line.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);
-      if (matches) {
-        return {
-          name: matches[1],
-          url: matches[2],
-          icon: matches[3]?.replace(/[\[\]]/g, '') || '',
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        };
-      }
-      return null;
-    })
-    .filter(Boolean);
+async function fetchLinks() {
+  const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
+  try {
+    const response = await fetch(LINKS_URL);
+    const content = await response.text();
+    return content.split('\n')
+      .filter(line => line.trim())
+      .map(line => {
+        const matches = line.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);
+        if (matches) {
+          return {
+            name: matches[1],
+            url: matches[2],
+            icon: matches[3]?.replace(/[\[\]]/g, '') || ''
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  } catch (error) {
+    console.error('Error fetching links:', error);
+    return [];
+  }
 }
 
-const links = await getLinks();
+const links = await fetchLinks();
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+		<link rel="icon" type="image/png" href="https://bh3gei.github.io/avatar.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>YAO's Links</title>
@@ -422,6 +424,49 @@ const links = await getLinks();
 		</div>
 
 		<script>
+			// 定期更新链接
+			async function fetchLinks() {
+				const LINKS_URL = 'https://raw.githubusercontent.com/BH3GEI/Resume/main/all_links.md';
+				try {
+					const response = await fetch(LINKS_URL);
+					const content = await response.text();
+					return content.split('\n')
+						.filter(line => line.trim())
+						.map(line => {
+							const matches = line.match(/\[(.*?)\]\[(.*?)\]\s*(\[.*?\])?/);
+							if (matches) {
+								return {
+									name: matches[1],
+									url: matches[2],
+									icon: matches[3]?.replace(/[\[\]]/g, '') || ''
+								};
+							}
+							return null;
+						})
+						.filter(Boolean);
+				} catch (error) {
+					console.error('Error fetching links:', error);
+					return [];
+				}
+			}
+
+			async function updateLinks() {
+				const links = await fetchLinks();
+				const linksList = document.querySelector('.links-list');
+				
+				linksList.innerHTML = links.map((link, index) => `
+					<li class="link-item" style="animation-delay: ${index * 100}ms">
+						<a href="${link.url}" target="_blank" rel="noopener noreferrer" class="link">
+							<span class="link-icon">${link.icon}</span>
+							<span class="link-name">${link.name}</span>
+						</a>
+					</li>
+				`).join('');
+			}
+
+			// 每隔一定时间自动更新 (比如每5分钟)
+			setInterval(updateLinks, 5 * 60 * 1000);
+
 			const searchInput = document.getElementById('searchInput');
 			const searchIcon = document.getElementById('searchIcon');
 			const searchEngines = document.getElementById('searchEngines');
