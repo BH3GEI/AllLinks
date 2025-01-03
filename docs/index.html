@@ -254,25 +254,89 @@
             }
 
             h1 {
-                font-size: 2rem;
-                margin-top: 5rem;
+                font-size: 1.8rem;
+                margin-top: 6rem;
+                margin-bottom: 2rem;
             }
 
             .links-list {
                 grid-template-columns: 1fr;
+                gap: 0.8rem;
             }
 
             .search-container {
-                left: 20px;
-                right: 20px;
+                position: fixed;
+                left: 0;
+                right: 0;
+                top: 0;
+                padding: 10px;
+                background: rgba(15, 15, 35, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
             }
 
             .search-input {
-                width: calc(100% - 30px);
+                width: 100%;
+                box-sizing: border-box;
+                font-size: 16px; /* 防止iOS自动缩放 */
+                padding: 12px 15px;
             }
 
             .search-input:focus {
-                width: calc(100% - 30px);
+                width: 100%;
+            }
+
+            .search-engines {
+                width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
+            }
+
+            .engine-btn {
+                padding: 12px 15px; /* 更大的点击区域 */
+                font-size: 16px;
+            }
+
+            .link {
+                padding: 15px;
+            }
+
+            .link-icon {
+                font-size: 1.3rem;
+            }
+
+            .link-name {
+                font-size: 1rem;
+                line-height: 1.4;
+            }
+
+            /* 添加触摸反馈 */
+            .link:active {
+                transform: scale(0.98);
+                background: rgba(var(--accent), 0.15);
+            }
+        }
+
+        /* 添加深色模式支持 */
+        @media (prefers-color-scheme: dark) {
+            .search-container {
+                background: rgba(15, 15, 35, 0.95);
+            }
+        }
+
+        /* 优化触摸设备的悬停效果 */
+        @media (hover: none) {
+            .link:hover {
+                transform: none;
+            }
+
+            .link:hover::before {
+                display: none;
+            }
+
+            .engine-btn:hover {
+                transform: none;
             }
         }
     </style>
